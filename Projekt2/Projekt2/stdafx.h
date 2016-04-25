@@ -9,7 +9,13 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <vector>
+#include <time.h>
 
+using namespace std;
 
 
 // TODO: reference additional headers your program requires here

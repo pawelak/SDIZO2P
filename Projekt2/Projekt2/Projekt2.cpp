@@ -2,10 +2,12 @@
 //
 
 #include "stdafx.h"
+#include "GenerateGraph.h"
 
 
 int main()
 {
+	GenerateGraph generateGraph(7, 50);
     return 0;
 }
 

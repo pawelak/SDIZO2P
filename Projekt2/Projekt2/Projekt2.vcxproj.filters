@@ -24,10 +24,10 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeerateGraph.h">
+    <ClInclude Include="Operation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Operation.h">
+    <ClInclude Include="GenerateGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,10 +38,10 @@
     <ClCompile Include="Projekt2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeerateGraph.cpp">
+    <ClCompile Include="Operation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operation.cpp">
+    <ClCompile Include="GenerateGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
