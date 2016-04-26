@@ -84,7 +84,8 @@ GenerateGraph::GenerateGraph(int nodes, float density)
 				next = rand() % nodes;
 				for (int j = 0; j < i; j++)
 				{
-					if ((result[j][0] == previous && result[j][1] == next) && (next == previous))
+					
+					if ((result[j][0] == previous && result[j][1] == next) || (next == previous))
 					{
 						czyJest = true;
 						break;

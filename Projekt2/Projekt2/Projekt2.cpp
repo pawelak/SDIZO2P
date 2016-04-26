@@ -13,11 +13,15 @@ int main()
 	operation.readStructure();
 	operation.makeMatrix1();
 	operation.printMatrix1();
-	operation.primM();
+	//operation.primM();
 	//operation.makeNeighborList1();
 	//operation.printNeighbourList1();
+	//operation.dijkstr(1);
 	//operation.makeMatrix1();
 	//operation.printMatrix1();
+	operation.makeNeighborListD();
+	operation.printListD();
+
     return 0;
 }
 
