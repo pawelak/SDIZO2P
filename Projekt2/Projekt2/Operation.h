@@ -12,10 +12,12 @@ private:
 	
 	//elList **neighborList;
 	int **x;
+	int **y;
 	int **matrix1;
 	int **wynikM1;
 	int **wynikLD;
 	int startowy, koncowy;
+	int edgeY;
 
 	elList **listD;
 	//bartek dijksty
@@ -26,6 +28,7 @@ private:
 public:
 	Operation();
 	void readStructure();
+	void makeY();
 	void makeNeighborListD();
 	void printListD();
 	void makeNeighborList1();

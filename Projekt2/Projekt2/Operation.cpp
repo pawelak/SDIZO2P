@@ -48,54 +48,72 @@ void Operation::readStructure()
 	}
 	else
 		cout << "File error - OPEN calekim" << endl;
+
+	//for (int i = 0; i < edges; i++)
+	//{
+	//	cout << x[i][0] << " " << x[i][1] << " " << x[i][2] << endl;
+	//}
+	//cout << "po readzie" << endl;
 }
 
+void Operation::makeY() {
 	
-
-void Operation::makeNeighborListD()		//dziala dziêki bartek
-{
 	bool *a;
 	a = new bool[edges];
 	for (int i = 0; i < edges; i++) a[i] = false;
-	listD = new elList *[nodes];
-	for (int i = 0; i < nodes; i++) listD[i] = NULL;
+	y = new int *[edges];
+	for (int i = 0; i < edges; i++) y[i] = NULL;
 	for (int i = 0; i < edges; i++)
 	{
 		for (int j = 0; j < i; j++)
 		{
-			cout << "to: " << x[i][0] << " z: " << x[j][0] << " ... " << "to: " << x[i][1] << " z: " << x[j][1] << endl;
-			cout << "to: " << x[i][1] << " z: " << x[i][1] << " ... " << "to: " << x[i][0] << " z: " << x[j][1] << endl;
- 			cout << "------------------------------------------------" << endl;
 			if ((x[i][0] == x[j][0] && x[i][1] == x[j][1]) || (x[i][1] == x[j][0] && x[i][0] == x[j][1]))
 			{
 				a[i] = false;
 				break;
 			}
-			//tmp = new elList;    // tworzymy nowy element
-			//tmp->n = x[i][1];          // numerujemy go jako v2
-			//tmp->waga = x[i][2];
-			//tmp->next = listD[x[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
-			//listD[x[i][0]] = tmp;
 			a[i] = true;
-			
 		}
-		
-		int j = 0;
-		for (int i = 0; i < edges; i++) {
-			if (a[j] == true) {
-				tmp = new elList;    // tworzymy nowy element
-				tmp->n = x[i][1];          // numerujemy go jako v2
-				tmp->waga = x[i][2];
-				tmp->next = listD[x[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
-				listD[x[i][0]] = tmp;
-				j++;
-			}
+	}
+
+	edgeY = 0;
+	for (int i = 0; i < edges; i++) {
+		if (a[i] == true) {
+			y[edgeY] = new int[3];
+			y[edgeY][0] = x[i][0];
+			y[edgeY][1] = x[i][1];
+			y[edgeY][2] = x[i][2];
+			edgeY++;
 		}
-			
-		}
-	for (int i = 0; i < edges; i++)
+	}
+
+	//for (int i = 0; i < edgeY; i++)
+	//{
+	//	cout << "i: " << i << " " << y[i][0] << " " << y[i][1] << " " << y[i][2] << endl;
+	//}
+
+}
+	
+
+void Operation::makeNeighborListD()		//dziala dziêki bartek
+{
+	listD = new elList *[nodes];
+	for (int i = 0; i < nodes; i++) listD[i] = NULL;
+	for (int i = 0; i < edgeY; i++)
 	{
-		cout << "i: " << i << " "  << a[i] << endl;
+		tmp = new elList;    // tworzymy nowy element
+		tmp->n = y[i][1];          // numerujemy go jako v2
+		tmp->waga = y[i][2];
+		tmp->next = listD[y[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
+		listD[y[i][0]] = tmp;
+
+
+		tmp = new elList;    // tworzymy nowy element
+		tmp->n = y[i][0];          // numerujemy go jako v2
+		tmp->waga = y[i][2];
+		tmp->next = listD[y[i][1]];    // dodajemy go na pocz¹tek listy a[v1]
+		listD[y[i][1]] = tmp;
+		
 	}
 }
 
@@ -258,10 +276,12 @@ void Operation::primM()
 		odwiedzone[idx] = true;
 		wierzcholkiDoDrzewa.push_back(idx);
 	}
-
+	int MST = 0;
 	for (int i = 0; i < nodes-1; i++) {
-		cout << wynikM1[i][0] << " " << wynikM1[i][1] << " " << wynikM1[i][2] << endl;
+		cout << "(" << wynikM1[i][0] << "," << wynikM1[i][1] << ")   " << wynikM1[i][2] << endl;
+		MST += wynikM1[i][2];
 	}
+	cout << "MST: " << MST << endl;
 
 }
 
@@ -304,20 +324,7 @@ void Operation::primLD()
 				}
 				tmp = tmp->next;
 			}
-
-			//for (int k = 0; k < nodes; k++)
-			//{
-			//	if (matrix1[aktualnyWierzcholek][k] != 0 && matrix1[aktualnyWierzcholek][k] < nWaga && odwiedzone[k] == false)
-			//	{
-			//		idx = k;
-			//		idy = aktualnyWierzcholek;
-			//		nWaga = matrix1[aktualnyWierzcholek][k];
-
-			//	}
-
-			//}
 		}
-		cout << aktualnyWierzcholek << endl;
 		wynikLD[i] = new int[3];
 		wynikLD[i][0] = stad;
 		wynikLD[i][1] = tam;
@@ -328,9 +335,12 @@ void Operation::primLD()
 		wierzcholkiDoDrzewa.push_back(tam);
 	}
 
+	int MST = 0;
 	for (int i = 0; i < nodes - 1; i++) {
-		cout << wynikLD[i][0] << " " << wynikLD[i][1] << " " << wynikLD[i][2] << endl;
+		cout <<"(" <<  wynikLD[i][0] << "," << wynikLD[i][1] << ")   " << wynikLD[i][2] << endl;
+		MST += wynikLD[i][2];
 	}
+	cout << "MST: " << MST << endl;
 
 }
 
