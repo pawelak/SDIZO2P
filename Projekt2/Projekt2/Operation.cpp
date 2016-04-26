@@ -54,26 +54,66 @@ void Operation::readStructure()
 
 void Operation::makeNeighborListD()		//dziala dziêki bartek
 {
+	bool *a;
+	a = new bool[edges];
+	for (int i = 0; i < edges; i++) a[i] = false;
 	listD = new elList *[nodes];
 	for (int i = 0; i < nodes; i++) listD[i] = NULL;
 	for (int i = 0; i < edges; i++)
 	{
 		for (int j = 0; j < i; j++)
 		{
-			if ((x[i][0] == x[j][0] && x[i][1] == x[j][1]) || (x[i][1] == x[j][0] && x[i][0] == x[j][1]))break;
-			else
+			cout << "to: " << x[i][0] << " z: " << x[j][0] << " ... " << "to: " << x[i][1] << " z: " << x[j][1] << endl;
+			cout << "to: " << x[i][1] << " z: " << x[i][1] << " ... " << "to: " << x[i][0] << " z: " << x[j][1] << endl;
+ 			cout << "------------------------------------------------" << endl;
+			if ((x[i][0] == x[j][0] && x[i][1] == x[j][1]) || (x[i][1] == x[j][0] && x[i][0] == x[j][1]))
 			{
-				tmp = new elList;    // Tworzymy nowy element
-				tmp->n = x[i][1];          // Numerujemy go jako v2
-				tmp->waga = x[i][2];
-				tmp->next = listD[x[i][0]];    // Dodajemy go na pocz¹tek listy A[v1]
-				listD[x[i][0]] = tmp;
+				a[i] = false;
 				break;
-				
+			}
+			//tmp = new elList;    // tworzymy nowy element
+			//tmp->n = x[i][1];          // numerujemy go jako v2
+			//tmp->waga = x[i][2];
+			//tmp->next = listD[x[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
+			//listD[x[i][0]] = tmp;
+			a[i] = true;
+			
+		}
+		
+		int j = 0;
+		for (int i = 0; i < edges; i++) {
+			if (a[j] == true) {
+				tmp = new elList;    // tworzymy nowy element
+				tmp->n = x[i][1];          // numerujemy go jako v2
+				tmp->waga = x[i][2];
+				tmp->next = listD[x[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
+				listD[x[i][0]] = tmp;
+				j++;
 			}
 		}
+			
+		}
+	for (int i = 0; i < edges; i++)
+	{
+		cout << "i: " << i << " "  << a[i] << endl;
 	}
 }
+
+
+//void Operation::makeNeighborListD()		//dziala dziêki bartek
+//{
+//	listD = new elList *[nodes];
+//	for (int i = 0; i < nodes; i++) listD[i] = NULL;
+//	for (int i = 0; i < edges; i++)
+//	{
+//		for (int j = 0; j < i; j++)
+//		{
+//			if()
+//		}
+//	}
+//}
+
+
 
 void Operation::printListD()
 {
@@ -83,7 +123,7 @@ void Operation::printListD()
 		tmp = listD[i];
 		while (tmp)
 		{
-			cout << setw(3) << tmp->n;
+			cout << setw(6) << tmp->n << "(" << tmp->waga << ")";
 			tmp = tmp->next;
 		}
 		cout << endl;
@@ -225,6 +265,74 @@ void Operation::primM()
 
 }
 
+
+void Operation::primLD()
+{
+	wynikLD = new int*[nodes - 1];
+
+	int aktualnyWierzcholek = x[0][0];
+	vector <int> wierzcholkiDoDrzewa;
+	wierzcholkiDoDrzewa.push_back(aktualnyWierzcholek);
+	int help;
+	bool *odwiedzone;
+	odwiedzone = new bool[nodes];
+	for (int i = 0; i < nodes; i++) {
+		odwiedzone[i] = false;
+	}
+	int stad, tam, nWaga;
+	stad = aktualnyWierzcholek;
+	tam = aktualnyWierzcholek;
+	odwiedzone[aktualnyWierzcholek] = true;
+
+	for (int i = 0; i < nodes; i++)
+	{
+		aktualnyWierzcholek = wierzcholkiDoDrzewa[0];
+		nWaga = 11;
+		for (int j = 0; j < wierzcholkiDoDrzewa.size(); j++)
+		{
+			
+			aktualnyWierzcholek = wierzcholkiDoDrzewa[j];
+			tmp = listD[aktualnyWierzcholek];
+			while (tmp)
+			{
+				if (tmp->waga != 0 && tmp->waga < nWaga && odwiedzone[tmp->n] == false)
+				{
+					stad = aktualnyWierzcholek;
+					tam = tmp->n;
+					nWaga = tmp->waga;
+
+				}
+				tmp = tmp->next;
+			}
+
+			//for (int k = 0; k < nodes; k++)
+			//{
+			//	if (matrix1[aktualnyWierzcholek][k] != 0 && matrix1[aktualnyWierzcholek][k] < nWaga && odwiedzone[k] == false)
+			//	{
+			//		idx = k;
+			//		idy = aktualnyWierzcholek;
+			//		nWaga = matrix1[aktualnyWierzcholek][k];
+
+			//	}
+
+			//}
+		}
+		cout << aktualnyWierzcholek << endl;
+		wynikLD[i] = new int[3];
+		wynikLD[i][0] = stad;
+		wynikLD[i][1] = tam;
+		wynikLD[i][2] = nWaga;
+
+
+		odwiedzone[tam] = true;
+		wierzcholkiDoDrzewa.push_back(tam);
+	}
+
+	for (int i = 0; i < nodes - 1; i++) {
+		cout << wynikLD[i][0] << " " << wynikLD[i][1] << " " << wynikLD[i][2] << endl;
+	}
+
+}
 
 void Operation::printMatrix1()
 {

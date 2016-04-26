@@ -14,6 +14,7 @@ private:
 	int **x;
 	int **matrix1;
 	int **wynikM1;
+	int **wynikLD;
 	int startowy, koncowy;
 
 	elList **listD;
@@ -31,6 +32,7 @@ public:
 	void printNeighbourList1();
 	void makeMatrix1();
 	void primM();
+	void primLD();
 	void printMatrix1();
 	void dijkstr(int);
 	~Operation();
