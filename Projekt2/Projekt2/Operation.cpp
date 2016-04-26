@@ -148,60 +148,73 @@ void Operation::printListD()
 	}
 }
 
-void Operation::makeNeighborList1()		//dziala dziêki bartek
-{
-	int a;
-	fstream file("plik.txt", std::ios::in);
-	if (file.is_open())
+void Operation::makeNeighborList1()		//dziala dziêki bartek 
+{											// NAPRAWCIE 
+	neighborList1 = new elList *[nodes];
+	for (int i = 0; i < nodes; i++) neighborList1[i] = NULL;
+	for (int i = 0; i < edges; i++)
 	{
-		file >> edges;
-		file >> nodes;
-		file >> a;
-		file >> a;
-		neighborList1 = new elList *[nodes];
-		for (int i = 0; i < nodes; i++) neighborList1[i] = NULL;
 
-		if (file.fail())
-			cout << "File error to " << endl;
-		else
-		{
-			int source, dest, w;
-			for (int i = 0; i < edges; i++)
-			{
-				file >> source;
-				file >> dest;
-				file >> w;
-
-				tmp = new elList;    // Tworzymy nowy element
-				tmp->n = dest;          // Numerujemy go jako v2
-				tmp->waga = w;
-				tmp->next = neighborList1[source];    // Dodajemy go na pocz¹tek listy A[v1]
-				neighborList1[source] = tmp;
-
-
-			}
-		}
-
-		file.close();
+		tmp = new elList;    // Tworzymy nowy element
+		tmp->n = y[i][1];          // Numerujemy go jako v2
+		tmp->waga = y[i][2];
+		tmp->next = neighborList1[y[i][0]];    // Dodajemy go na pocz¹tek listy A[v1]
+		neighborList1[y[i][0]] = tmp;
 	}
-	else
-		cout << "File error - OPEN calekim" << endl;
-}
 
-void Operation::printNeighbourList1()
-{
-
-	for (int i = 0; i < nodes; i++)
-	{
-		cout << "A[" << i << "] =";
-		tmp = neighborList1[i];
-		while (tmp)
-	{
-		cout << setw(3) << tmp->n << "("<< tmp->waga << ") ";
-		tmp = tmp->next;
-	}
-		cout << endl;
-	}
+//
+//	int a;
+//	fstream file("plik.txt", std::ios::in);
+//	if (file.is_open())
+//	{
+//		file >> edges;
+//		file >> nodes;
+//		file >> a;
+//		file >> a;
+//		neighborList1 = new elList *[nodes];
+//		for (int i = 0; i < nodes; i++) neighborList1[i] = NULL;
+//
+//		if (file.fail())
+//			cout << "File error to " << endl;
+//		else
+//		{
+//			int source, dest, w;
+//			for (int i = 0; i < edges; i++)
+//			{
+//				file >> source;
+//				file >> dest;
+//				file >> w;
+//
+//				tmp = new elList;    // Tworzymy nowy element
+//				tmp->n = dest;          // Numerujemy go jako v2
+//				tmp->waga = w;
+//				tmp->next = neighborList1[source];    // Dodajemy go na pocz¹tek listy A[v1]
+//				neighborList1[source] = tmp;
+//
+//
+//			}
+//		}
+//
+//		file.close();
+//	}
+//	else
+//		cout << "File error - OPEN calekim" << endl;
+//}
+//
+//void Operation::printNeighbourList1()
+//{
+//
+//	for (int i = 0; i < nodes; i++)
+//	{
+//		cout << "A[" << i << "] =";
+//		tmp = neighborList1[i];
+//		while (tmp)
+//	{
+//		cout << setw(3) << tmp->n << "("<< tmp->waga << ") ";
+//		tmp = tmp->next;
+//	}
+//		cout << endl;
+//	}
 }
 
 
@@ -425,15 +438,16 @@ void Operation::dijkstr(int start)
 			}
 	}
 
+
+	cout << "Startowy " << startowy << endl;
+	cout << "End    Dist    Path" << endl;
 	for (i = 0; i < nodes; i++)
 	{
 		cout << i << ": ";
-
 		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
-
+		cout << "   | " << d[i] << " |   ";
 		while (sptr) cout << S[--sptr] << " ";
-
-		cout << "$" << d[i] << endl;
+		cout << endl;
 	}
 }
 
@@ -484,16 +498,15 @@ void Operation::dijkstrM(int start)
 		}
 
 	}
-
+	cout << "Startowy " << startowy <<  endl;
+	cout << "End    Dist    Path" << endl;
 	for (i = 0; i < nodes; i++)
 	{
 		cout << i << ": ";
-
 		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
-
+		cout << "   | " << d[i] << " |   ";
 		while (sptr) cout << S[--sptr] << " ";
-
-		cout << "$" << d[i] << endl;
+		cout << endl;
 	}
 }
 
