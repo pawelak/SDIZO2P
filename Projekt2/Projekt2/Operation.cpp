@@ -197,7 +197,7 @@ void Operation::printNeighbourList1()
 		tmp = neighborList1[i];
 		while (tmp)
 	{
-		cout << setw(3) << tmp->n;
+		cout << setw(3) << tmp->n << "("<< tmp->waga << ") ";
 		tmp = tmp->next;
 	}
 		cout << endl;
@@ -217,14 +217,41 @@ void Operation::makeMatrix1()
 		}
 	}
 	
-	cout << edgeY << endl;
+	//cout << edgeY << endl;
 	for (int i = 0; i < edgeY; i++)
 	{
-		cout << y[i][2] << endl;
 		matrix1[y[i][0]][y[i][1]] = y[i][2];
 		matrix1[y[i][1]][y[i][0]] = y[i][2];
 	}
 }
+
+void Operation::makeMatrixLadnyKotek()
+{
+	matrix2 = new int *[nodes];
+	for (int i = 0; i < nodes; i++) {
+		matrix2[i] = new int[nodes];
+	}
+	for (int i = 0; i < nodes; i++) {
+		for (int j = 0; j < nodes; j++) {
+			matrix2[i][j] = 0;
+		}
+	}
+	for (int i = 0; i < edges; i++)
+	{
+		matrix2[x[i][0]][x[i][1]] = x[i][2];
+	}
+
+	cout << "mam ten kod" << endl;
+	for (int i = 0; i < nodes; i++)
+	{
+		for (int j = 0; j < nodes; j++)
+		{
+			cout << matrix2[i][j] << " ";
+		}
+		cout << endl;
+	}	
+}
+
 
 void Operation::primM()
 {
@@ -363,7 +390,7 @@ void Operation::dijkstr(int start)
 	//m-edges
 	int *d, *p, *S, sptr,i,j,u;
 	bool *QS;
-
+	//dd
 	d = new int[nodes];
 	p = new int[nodes];
 	QS = new bool[nodes];
@@ -390,7 +417,6 @@ void Operation::dijkstr(int start)
 		QS[u] = true;
 
 
-
 		for (tmp = neighborList1[u]; tmp; tmp = tmp->next)
 			if (!QS[tmp->n] && (d[tmp->n] > d[u] + tmp->waga))
 			{
@@ -410,6 +436,67 @@ void Operation::dijkstr(int start)
 		cout << "$" << d[i] << endl;
 	}
 }
+
+
+void Operation::dijkstrM(int start)
+{
+	//n-nodes
+	//m-edges
+	int *d, *p, *S, sptr, i, j, u;
+	bool *QS;
+	//dd
+	d = new int[nodes];
+	p = new int[nodes];
+	QS = new bool[nodes];
+	S = new int[nodes];
+	sptr = 0;
+
+	for (int i = 0; i<nodes; i++)
+	{
+		d[i] = MAXINT;
+		p[i] = -1;
+		QS[i] = false;
+		// neighborList1[i]=NULL;
+	}
+
+	cout << endl;
+	d[start] = 0;
+
+	for (int i = 0; i<nodes; i++)
+	{
+		for (j = 0; QS[j]; j++);
+		for (u = j++; j<nodes; j++)
+			if (!QS[j] && (d[j]<d[u])) u = j;
+
+		QS[u] = true;
+
+
+		for (int g = 0; g < nodes; g++)
+		{
+			if (matrix2[u][g]!=0)
+			{
+				if (!QS[g] && (d[g] > d[u] + matrix2[u][g]))
+				{
+					d[g] = d[u] + matrix2[u][g];
+					p[g] = u;
+				}
+			}
+		}
+
+	}
+
+	for (i = 0; i < nodes; i++)
+	{
+		cout << i << ": ";
+
+		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
+
+		while (sptr) cout << S[--sptr] << " ";
+
+		cout << "$" << d[i] << endl;
+	}
+}
+
 
 Operation::~Operation()
 {

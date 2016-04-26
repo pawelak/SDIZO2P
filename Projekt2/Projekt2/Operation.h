@@ -14,9 +14,10 @@ private:
 	int **x;
 	int **y;
 	int **matrix1;
+	int **matrix2;
 	int **wynikM1;
 	int **wynikLD;
-	int startowy, koncowy;
+	
 	int edgeY;
 
 	elList **listD;
@@ -26,6 +27,7 @@ private:
 	const int MAXINT = 2147483647;
 
 public:
+	int startowy, koncowy;
 	Operation();
 	void readStructure();
 	void makeY();
@@ -34,10 +36,12 @@ public:
 	void makeNeighborList1();
 	void printNeighbourList1();
 	void makeMatrix1();
+	void makeMatrixLadnyKotek();
 	void primM();
 	void primLD();
 	void printMatrix1();
 	void dijkstr(int);
+	void dijkstrM(int start);
 	~Operation();
 };
 

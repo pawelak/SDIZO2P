@@ -8,25 +8,13 @@
 
 int main()
 {
-	//GenerateGraph generateGraph(5, 80);
-	Operation operation;
-	operation.readStructure();
-	//operation.primM();
-	//operation.makeNeighborList1();
-	//operation.printNeighbourList1();
-	//operation.dijkstr(1);
-	//operation.makeMatrix1();
-	//operation.printMatrix1();
-	//operation.makeNeighborListD();
-	//operation.printListD();
-	//operation.primLD();
-	operation.makeY();
-	operation.makeMatrix1();
-	operation.printMatrix1();
-	operation.makeNeighborListD();
-	operation.printListD();
-	operation.primLD(); 
-	operation.primM();
+	Operation o;
+	o.readStructure();
+	o.makeNeighborList1();
+	o.dijkstr(o.startowy);
+	cout << endl;
+	o.makeMatrixLadnyKotek();
+	o.dijkstrM(o.startowy);
 
     return 0;
 }
