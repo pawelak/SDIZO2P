@@ -3,11 +3,21 @@
 
 #include "stdafx.h"
 #include "GenerateGraph.h"
+#include "Operation.h"
 
 
 int main()
 {
-	GenerateGraph generateGraph(7, 50);
+	//GenerateGraph generateGraph(5, 80);
+	Operation operation;
+	operation.readStructure();
+	operation.makeMatrix1();
+	operation.printMatrix1();
+	operation.primM();
+	//operation.makeNeighborList1();
+	//operation.printNeighbourList1();
+	//operation.makeMatrix1();
+	//operation.printMatrix1();
     return 0;
 }
 

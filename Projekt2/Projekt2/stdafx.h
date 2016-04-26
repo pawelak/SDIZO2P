@@ -14,6 +14,8 @@
 #include <fstream>
 #include <vector>
 #include <time.h>
+#include <list>
+#include <iomanip>
 
 using namespace std;
 

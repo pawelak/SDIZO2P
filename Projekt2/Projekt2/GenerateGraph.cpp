@@ -16,7 +16,7 @@ GenerateGraph::GenerateGraph(int nodes, float density)
 	int minDensity = ceil((minE / maxE) * 100);
 	edges = ceil(maxE*(density / 100));					//tyle chcemy krawêdzi
 	int weight;
-	result = new int *[edges];							
+	result = new int *[2*edges];							
 
 	if (density > minDensity && density<100)			//warunki wejœcia ¿eby nie robi³o niedorzcznych grafów
 	{													//tu robi drzewo rozpinaj¹ce ¿eby by³ warunek na spójnosæ grafu 
@@ -53,7 +53,8 @@ GenerateGraph::GenerateGraph(int nodes, float density)
 				next = rand() % nodes;
 				for (int j = 0; j < i; j++)
 				{
-					if ((result[j][0] == previous && result[j][1] == next) || (result[j][0] == next && result[j][1] == previous) || (next == previous))
+					if ((result[j][0] == previous && result[j][1] == next) ||
+						(result[j][0] == next && result[j][1] == previous) || (next == previous))
 					{
 						czyJest = true;
 						break;
@@ -72,16 +73,48 @@ GenerateGraph::GenerateGraph(int nodes, float density)
 
 		}
 
-		for (int i = 0; i < edges; i++)	cout << result[i][0] << " " << result[i][1] << " " << result[i][2] << endl;
-		tab.clear();		//chyba tak siê odopala destruktor vektora
+		int help;
+		for (int i = edges; i < edges*2; i++)
+		{
+			
+			while (true)
+			{
+				czyJest = false;
+				previous = rand() % nodes;
+				next = rand() % nodes;
+				for (int j = 0; j < i; j++)
+				{
+					if ((result[j][0] == previous && result[j][1] == next) && (next == previous))
+					{
+						czyJest = true;
+						break;
+					}
+
+				}
+				if (czyJest == false)
+				{
+					result[i] = new int[3];
+					result[i][0] = previous;
+					result[i][1] = next;
+					weight = rand() % maxWeight + 1;
+					result[i][2] = weight;
+					break;
+				}
+			}
+
+		}
+
+		//cout << "dupa" << endl;
+		//for (int i = 0; i < edges; i++)	cout << result[i][0] << " " << result[i][1] << " " << result[i][2] << endl;
+		//tab.clear();		//chyba tak siê odopala destruktor vektora
 	}
 	else cout << "blendna gestosc " << endl;
 
 	fstream plik("plik.txt", ios::out);				//wpisuje do pliku 
 	if (plik.good())			
 	{
-		plik << nodes << " " << edges << "\n";
-		for (int i = 0; i < edges; i++)	plik << result[i][0] << " " << result[i][1] << " " << result[i][2] << "\n";
+		plik << 2*edges << " " << nodes << " " << result[0][0] << " " <<  result[nodes-1][0] << "\n";
+		for (int i = 0; i < 2*edges; i++)	plik << result[i][0] << " " << result[i][1] << " " << result[i][2] << "\n";
 		plik.close();
 	}
 }
@@ -89,6 +122,6 @@ GenerateGraph::GenerateGraph(int nodes, float density)
 
 GenerateGraph::~GenerateGraph()
 {
-	for (int i = 0; i < edges; i++)	delete result[i];
+	for (int i = 0; i < 2*edges; i++)	delete result[i];
 	result = NULL;
 }
