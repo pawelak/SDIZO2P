@@ -11,8 +11,6 @@ int main()
 	//GenerateGraph generateGraph(5, 80);
 	Operation operation;
 	operation.readStructure();
-	operation.makeMatrix1();
-	//operation.printMatrix1();
 	//operation.primM();
 	//operation.makeNeighborList1();
 	//operation.printNeighbourList1();
@@ -23,6 +21,8 @@ int main()
 	//operation.printListD();
 	//operation.primLD();
 	operation.makeY();
+	operation.makeMatrix1();
+	operation.printMatrix1();
 	operation.makeNeighborListD();
 	operation.printListD();
 	operation.primLD(); 

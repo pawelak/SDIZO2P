@@ -216,35 +216,31 @@ void Operation::makeMatrix1()
 			matrix1[i][j] = 0;
 		}
 	}
-	for (int i = 0; i < edges; i++)
+	
+	cout << edgeY << endl;
+	for (int i = 0; i < edgeY; i++)
 	{
-		for (int j = 0; j < i; j++)
-		{
-			if ((x[i][0] == x[j][0] && x[i][1] == x[j][1]) || (x[i][1] == x[j][0] && x[i][0] == x[j][1]))break;
-			else
-			{
-				matrix1[x[i][0]][x[i][1]] = x[i][2];
-				matrix1[x[i][1]][x[i][0]] = x[i][2];
-			}
-		}
+		cout << y[i][2] << endl;
+		matrix1[y[i][0]][y[i][1]] = y[i][2];
+		matrix1[y[i][1]][y[i][0]] = y[i][2];
 	}
 }
 
 void Operation::primM()
 {
 	wynikM1 = new int*[nodes - 1];
-	int aktualnyWierzcholek = x[0][0];
+	int aktualnyWierzcholek = y[0][0];
 	vector <int> wierzcholkiDoDrzewa;
 	wierzcholkiDoDrzewa.push_back(aktualnyWierzcholek);
 	int help;
 	bool *odwiedzone;
 	odwiedzone = new bool[nodes];
-	for (int i = 0; i < nodes; i++) {
-		odwiedzone[i] = false;
-	}
+	for (int i = 0; i < nodes; i++)	odwiedzone[i] = false;
+
 	int idx,idy, nWaga;
 	idy = aktualnyWierzcholek;
 	idx = aktualnyWierzcholek;
+
 	odwiedzone[aktualnyWierzcholek] = true;
 
 	for (int i = 0; i < nodes; i++)
@@ -256,7 +252,7 @@ void Operation::primM()
 			aktualnyWierzcholek = wierzcholkiDoDrzewa[j];
 			for (int k = 0; k < nodes; k++)
 			{
-				cout << matrix1[aktualnyWierzcholek][k];
+				//cout << matrix1[aktualnyWierzcholek][k];
 				if (matrix1[aktualnyWierzcholek][k] != 0 && matrix1[aktualnyWierzcholek][k] < nWaga && odwiedzone[k] == false)
 				{
 					idx = k;
