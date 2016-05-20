@@ -24,10 +24,13 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GenerateGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Operation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GenerateGraph.h">
+    <ClInclude Include="MENU.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,13 +38,16 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Projekt2.cpp">
+    <ClCompile Include="projekt2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GenerateGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Operation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GenerateGraph.cpp">
+    <ClCompile Include="MENU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

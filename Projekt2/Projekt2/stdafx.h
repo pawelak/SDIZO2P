@@ -5,6 +5,7 @@
 
 #pragma once
 
+
 #include "targetver.h"
 
 #include <stdio.h>
@@ -16,8 +17,12 @@
 #include <time.h>
 #include <list>
 #include <iomanip>
+#include <string>
+#include <string.h>
+#include <time.h>
 
 using namespace std;
+
 
 
 // TODO: reference additional headers your program requires here

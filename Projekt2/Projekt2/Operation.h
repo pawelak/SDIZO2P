@@ -9,39 +9,38 @@ private:
 	};
 	int nodes, edges;
 
-	
-	//elList **neighborList;
-	int **x;
-	int **y;
-	int **matrix1;
-	int **matrix2;
-	int **wynikM1;
-	int **wynikLD;
-	
+
 	int edgeY;
 
 	elList **listD;
-	//bartek dijksty
-	elList **neighborList1, *tmp, *tmpDelete;
-	elList *pw, *rw;
+	elList **neighborList1;
+
+
+
+
+	int **x, **y, **matrixPrim, **matrixDjistry, **resultPrimMatrix, **resultPrimList, *smallestListL, *nodesListL, *smallestListM, *nodesListM;//du¿o tego ale chcialem mieæ ka¿de osobno
+	elList **ListDjikstry, *tmp, *tmpDelete, **listPrim;
 	const int MAXINT = 2147483647;
 
 public:
 	int startowy, koncowy;
 	Operation();
-	void readStructure();
+	void readStructure(string adr);
 	void makeY();
-	void makeNeighborListD();
-	void printListD();
-	void makeNeighborList1();
-	void printNeighbourList1();
-	void makeMatrix1();
-	void makeMatrixLadnyKotek();
-	void primM();
-	void primLD();
-	void printMatrix1();
-	void dijkstr(int);
-	void dijkstrM(int start);
+	void makeNeighborListPrim();
+	void printListPrim();
+	void makeNeighborListDijkstry();
+	void printListDjikstry();
+	void makeMatrixPrim();
+	void printMatrixPrim();
+	void makeMatrixDjistry();
+	void printMatrixDjikstry();
+	void primMatrix();
+	void printPrimM();
+	void primList();
+	void printPrimL();
+	void dijkstryL(int start);
+	void dijkstryM(int start);
 	~Operation();
 };
 

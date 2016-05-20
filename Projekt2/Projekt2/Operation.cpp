@@ -4,13 +4,12 @@
 
 Operation::Operation()
 {
-
 }
 
 
-void Operation::readStructure()
+void Operation::readStructure(string adr)
 {
-	fstream file("plik.txt", std::ios::in);
+	fstream file(adr, std::ios::in);		//wczytuje mi do pomocniczej tablicy
 	if (file.is_open())
 	{
 		file >> edges;
@@ -39,7 +38,7 @@ void Operation::readStructure()
 					x[i][0] = source;
 					x[i][1] = dest;
 					x[i][2] = w;
-					//cout << x[i][0] << " " << x[i][1] << " " << x[i][2] <<  endl;
+					//cout << x[i][0] << " " << x[i][1] << " " << x[i][2] << endl;
 				}
 			}
 		}
@@ -48,312 +47,263 @@ void Operation::readStructure()
 	}
 	else
 		cout << "File error - OPEN calekim" << endl;
-
-	//for (int i = 0; i < edges; i++)
-	//{
-	//	cout << x[i][0] << " " << x[i][1] << " " << x[i][2] << endl;
-	//}
-	//cout << "po readzie" << endl;
 }
 
 void Operation::makeY() {
-	
+
 	bool *a;
 	a = new bool[edges];
 	for (int i = 0; i < edges; i++) a[i] = false;
 	y = new int *[edges];
 	for (int i = 0; i < edges; i++) y[i] = NULL;
-	for (int i = 0; i < edges; i++)
+	a[0] = true;
+	for (int i = 1; i < edges; i++)
 	{
 		for (int j = 0; j < i; j++)
 		{
+			//cout << i << endl;
+			//cout << x[i][0] << "==" << x[j][0] << " && " << x[i][1] << "==" << x[j][1]  << " || " << x[i][1] << "==" << x[j][0] << " && " << x[i][0] << "==" << x[j][1] << endl;
 			if ((x[i][0] == x[j][0] && x[i][1] == x[j][1]) || (x[i][1] == x[j][0] && x[i][0] == x[j][1]))
 			{
 				a[i] = false;
 				break;
-			}
-			a[i] = true;
+			}else a[i] = true;
 		}
 	}
 
+	a[0] = true;
 	edgeY = 0;
-	for (int i = 0; i < edges; i++) {
-		if (a[i] == true) {
+	for (int i = 0; i < edges; i++) 
+	{
+		if (a[i] == true)
+		{
 			y[edgeY] = new int[3];
 			y[edgeY][0] = x[i][0];
 			y[edgeY][1] = x[i][1];
 			y[edgeY][2] = x[i][2];
+			//cout << a[i] << endl;
+			//cout << x[i][0] << " " << x[i][1] << " " << x[i][2] << endl;
 			edgeY++;
 		}
 	}
-
-	//for (int i = 0; i < edgeY; i++)
-	//{
-	//	cout << "i: " << i << " " << y[i][0] << " " << y[i][1] << " " << y[i][2] << endl;
-	//}
-
+	delete[] a;
 }
-	
 
-void Operation::makeNeighborListD()		//dziala dziêki bartek
+//robli listê s¹siedztw dla nieskierowanej
+void Operation::makeNeighborListPrim()		//dziala dziêki bartek
 {
-	listD = new elList *[nodes];
-	for (int i = 0; i < nodes; i++) listD[i] = NULL;
+	listPrim = new elList *[nodes];
+	for (int i = 0; i < nodes; i++) listPrim[i] = NULL;
 	for (int i = 0; i < edgeY; i++)
 	{
-		tmp = new elList;    // tworzymy nowy element
-		tmp->n = y[i][1];          // numerujemy go jako v2
+		tmp = new elList;				//moje klasyczne dodawanie do listy urzywane jeszcze wielokronie
+		tmp->n = y[i][1];
 		tmp->waga = y[i][2];
-		tmp->next = listD[y[i][0]];    // dodajemy go na pocz¹tek listy a[v1]
-		listD[y[i][0]] = tmp;
+		tmp->next = listPrim[y[i][0]];    // dodajemy go na pocz¹tek listy 
+		listPrim[y[i][0]] = tmp;
 
 
-		tmp = new elList;    // tworzymy nowy element
-		tmp->n = y[i][0];          // numerujemy go jako v2
+		tmp = new elList;
+		tmp->n = y[i][0];
 		tmp->waga = y[i][2];
-		tmp->next = listD[y[i][1]];    // dodajemy go na pocz¹tek listy a[v1]
-		listD[y[i][1]] = tmp;
-		
+		tmp->next = listPrim[y[i][1]];
+		listPrim[y[i][1]] = tmp;
+		//taki myk tu jest ¿e z logiki grafu nie skierowanego wynika a s¹siad b to b s¹siad a czyli mamy to w strony
 	}
 }
 
-
-//void Operation::makeNeighborListD()		//dziala dziêki bartek
-//{
-//	listD = new elList *[nodes];
-//	for (int i = 0; i < nodes; i++) listD[i] = NULL;
-//	for (int i = 0; i < edges; i++)
-//	{
-//		for (int j = 0; j < i; j++)
-//		{
-//			if()
-//		}
-//	}
-//}
-
-
-
-void Operation::printListD()
-{
-	for (int i = 0; i < nodes; i++)
+//wypisuje
+void Operation::printListPrim()
+{									//zwykle drukowanie w zasadzie nie potrzebne
+	for (int i = 0; i <  nodes; i++)
 	{
-		cout << "A[" << i << "] =";
-		tmp = listD[i];
-		while (tmp)
-		{
-			cout << setw(6) << tmp->n << "(" << tmp->waga << ")";
-			tmp = tmp->next;
-		}
-		cout << endl;
+		cout << "A[" << i << "] =" << setw(6) << y[i][0] << " " << y[i][1] << " (" << y[i][2] << ")" << endl;
 	}
 }
 
-void Operation::makeNeighborList1()		//dziala dziêki bartek 
-{											// NAPRAWCIE 
-	neighborList1 = new elList *[nodes];
-	for (int i = 0; i < nodes; i++) neighborList1[i] = NULL;
+//robi listê s¹siadów dla skierowanej
+void Operation::makeNeighborListDijkstry()
+{											//robli liste s¹siadów dla grafu skierowanego 
+	ListDjikstry = new elList *[nodes];
+	//cout << nodes << " " << edges << endl;
+	for (int i = 0; i < nodes; i++) ListDjikstry[i] = NULL;
 	for (int i = 0; i < edges; i++)
 	{
-
-		tmp = new elList;    // Tworzymy nowy element
-		tmp->n = y[i][1];          // Numerujemy go jako v2
-		tmp->waga = y[i][2];
-		tmp->next = neighborList1[y[i][0]];    // Dodajemy go na pocz¹tek listy A[v1]
-		neighborList1[y[i][0]] = tmp;
+		tmp = new elList;
+		tmp->n = x[i][1];
+		tmp->waga = x[i][2];
+		tmp->next = ListDjikstry[x[i][0]];
+		ListDjikstry[x[i][0]] = tmp;
 	}
+}
 
-//
-//	int a;
-//	fstream file("plik.txt", std::ios::in);
-//	if (file.is_open())
-//	{
-//		file >> edges;
-//		file >> nodes;
-//		file >> a;
-//		file >> a;
-//		neighborList1 = new elList *[nodes];
-//		for (int i = 0; i < nodes; i++) neighborList1[i] = NULL;
-//
-//		if (file.fail())
-//			cout << "File error to " << endl;
-//		else
-//		{
-//			int source, dest, w;
-//			for (int i = 0; i < edges; i++)
-//			{
-//				file >> source;
-//				file >> dest;
-//				file >> w;
-//
-//				tmp = new elList;    // Tworzymy nowy element
-//				tmp->n = dest;          // Numerujemy go jako v2
-//				tmp->waga = w;
-//				tmp->next = neighborList1[source];    // Dodajemy go na pocz¹tek listy A[v1]
-//				neighborList1[source] = tmp;
-//
-//
-//			}
-//		}
-//
-//		file.close();
-//	}
-//	else
-//		cout << "File error - OPEN calekim" << endl;
-//}
-//
-//void Operation::printNeighbourList1()
-//{
-//
-//	for (int i = 0; i < nodes; i++)
-//	{
-//		cout << "A[" << i << "] =";
-//		tmp = neighborList1[i];
-//		while (tmp)
-//	{
-//		cout << setw(3) << tmp->n << "("<< tmp->waga << ") ";
-//		tmp = tmp->next;
-//	}
-//		cout << endl;
-//	}
+//drukarz do listy skierowanej
+void Operation::printListDjikstry()
+{									//zwykle drukowanie w zasadzie nie potrzebne
+	for (int i = 0; i < edgeY; i++)
+	{
+		cout << "A[" << i << "] =" << setw(6) << x[i][0] << " " << x[i][1] << " (" << x[i][2] << ")" << endl;
+	}
 }
 
 
-void Operation::makeMatrix1()
+//robi macierz dla nieskierowanych
+void Operation::makeMatrixPrim()
 {
-	matrix1 = new int *[nodes];
+	matrixPrim = new int *[nodes];
 	for (int i = 0; i < nodes; i++) {
-		matrix1[i] = new int[nodes];
+		matrixPrim[i] = new int[nodes];
 	}
 	for (int i = 0; i < nodes; i++) {
 		for (int j = 0; j < nodes; j++) {
-			matrix1[i][j] = 0;
+			matrixPrim[i][j] = 0;
 		}
 	}
-	
-	//cout << edgeY << endl;
 	for (int i = 0; i < edgeY; i++)
 	{
-		matrix1[y[i][0]][y[i][1]] = y[i][2];
-		matrix1[y[i][1]][y[i][0]] = y[i][2];
+		matrixPrim[y[i][0]][y[i][1]] = y[i][2];
+		matrixPrim[y[i][1]][y[i][0]] = y[i][2];
 	}
 }
 
-void Operation::makeMatrixLadnyKotek()
+//drukarz macierzy prima
+void Operation::printMatrixPrim()
 {
-	matrix2 = new int *[nodes];
-	for (int i = 0; i < nodes; i++) {
-		matrix2[i] = new int[nodes];
-	}
-	for (int i = 0; i < nodes; i++) {
-		for (int j = 0; j < nodes; j++) {
-			matrix2[i][j] = 0;
-		}
-	}
-	for (int i = 0; i < edges; i++)
-	{
-		matrix2[x[i][0]][x[i][1]] = x[i][2];
-	}
-
-	cout << "mam ten kod" << endl;
 	for (int i = 0; i < nodes; i++)
 	{
 		for (int j = 0; j < nodes; j++)
 		{
-			cout << matrix2[i][j] << " ";
+			cout << setw(4) << matrixPrim[i][j];
 		}
 		cout << endl;
-	}	
+	}
 }
 
-
-void Operation::primM()
+//robi macierz dla skierowanych
+void Operation::makeMatrixDjistry()
 {
-	wynikM1 = new int*[nodes - 1];
-	int aktualnyWierzcholek = y[0][0];
-	vector <int> wierzcholkiDoDrzewa;
-	wierzcholkiDoDrzewa.push_back(aktualnyWierzcholek);
-	int help;
-	bool *odwiedzone;
-	odwiedzone = new bool[nodes];
-	for (int i = 0; i < nodes; i++)	odwiedzone[i] = false;
+	matrixDjistry = new int *[nodes];
+	for (int i = 0; i < nodes; i++) {		//proces tworzenia macierzy
+		matrixDjistry[i] = new int[nodes];
+	}
+	for (int i = 0; i < nodes; i++) {
+		for (int j = 0; j < nodes; j++) {	//robi z niej zera po ca³oœci
+			matrixDjistry[i][j] = 0;
+		}
+	}
 
-	int idx,idy, nWaga;
-	idy = aktualnyWierzcholek;
-	idx = aktualnyWierzcholek;
+	for (int i = 0; i < edges; i++)
+	{
+		matrixDjistry[x[i][0]][x[i][1]] = x[i][2];	//to robi zapis
+	}
+}
 
-	odwiedzone[aktualnyWierzcholek] = true;
+//drukuje skierowan¹
+void Operation::printMatrixDjikstry()
+{
+	for (int i = 0; i < nodes; i++)
+	{
+		for (int j = 0; j < nodes; j++)
+		{
+			cout << matrixDjistry[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+//operacje prima dla macierzy 
+void Operation::primMatrix()	//do zamiany pamiêtanie
+{
+	resultPrimMatrix = new int*[nodes - 1];
+
+	bool *visited;
+	visited = new bool[nodes];
+	for (int i = 0; i < nodes; i++)	visited[i] = false;
+
+	int currentNodes = y[0][0];
+	vector <int> rememberedNodes;
+	rememberedNodes.push_back(currentNodes);
+
+
+	int idx, idy, nWaga;
+	idy = currentNodes;
+	idx = currentNodes;
+
+	visited[currentNodes] = true;
 
 	for (int i = 0; i < nodes; i++)
 	{
-		aktualnyWierzcholek = wierzcholkiDoDrzewa[0];
-		nWaga = 11;
-		for (int j = 0; j < wierzcholkiDoDrzewa.size(); j++)
+		currentNodes = rememberedNodes[0];				//co su¿y obieg ustawia bierz¹cy na pierwszy wêze³ pamiêtany
+		nWaga = INT32_MAX;								//resetuje wagê (bo musi znaleŸæ najmniejsz¹)
+		for (int j = 0; j < rememberedNodes.size(); j++)
 		{
-			aktualnyWierzcholek = wierzcholkiDoDrzewa[j];
+			currentNodes = rememberedNodes[j];			//j obraca po pamiêtanych wêz³ach które juz by³yi tu po koleju je ustawia
 			for (int k = 0; k < nodes; k++)
 			{
-				//cout << matrix1[aktualnyWierzcholek][k];
-				if (matrix1[aktualnyWierzcholek][k] != 0 && matrix1[aktualnyWierzcholek][k] < nWaga && odwiedzone[k] == false)
+				if (matrixPrim[currentNodes][k] != 0 && matrixPrim[currentNodes][k] < nWaga && visited[k] == false)
 				{
 					idx = k;
-					idy = aktualnyWierzcholek;
-					nWaga = matrix1[aktualnyWierzcholek][k];
-										
+					idy = currentNodes;
+					nWaga = matrixPrim[currentNodes][k];
+
 				}
 			}
 		}
-		cout << aktualnyWierzcholek << endl;
-		wynikM1[i] = new int[3];
-		wynikM1[i][0] = idy;
-		wynikM1[i][1] = idx;
-		wynikM1[i][2] = nWaga;
+		resultPrimMatrix[i] = new int[3];		//wciska do wyników rezultat
+		resultPrimMatrix[i][0] = idy;
+		resultPrimMatrix[i][1] = idx;
+		resultPrimMatrix[i][2] = nWaga;
 
-		
-		odwiedzone[idx] = true;
-		wierzcholkiDoDrzewa.push_back(idx);
+		visited[idx] = true;					//zapamêtuje jeden wiêcej w którym by³
+		rememberedNodes.push_back(idx);
 	}
-	int MST = 0;
-	for (int i = 0; i < nodes-1; i++) {
-		cout << "(" << wynikM1[i][0] << "," << wynikM1[i][1] << ")   " << wynikM1[i][2] << endl;
-		MST += wynikM1[i][2];
-	}
-	cout << "MST: " << MST << endl;
-
+	delete visited;
 }
 
 
-void Operation::primLD()
+//drukarz
+void Operation::printPrimM()
 {
-	wynikLD = new int*[nodes - 1];
-
-	int aktualnyWierzcholek = x[0][0];
-	vector <int> wierzcholkiDoDrzewa;
-	wierzcholkiDoDrzewa.push_back(aktualnyWierzcholek);
-	int help;
-	bool *odwiedzone;
-	odwiedzone = new bool[nodes];
-	for (int i = 0; i < nodes; i++) {
-		odwiedzone[i] = false;
+	int MST = 0;
+	for (int i = 0; i < nodes - 1; i++) {
+		cout << "(" << resultPrimMatrix[i][0] << "," << resultPrimMatrix[i][1] << ")   " << resultPrimMatrix[i][2] << endl;
+		MST += resultPrimMatrix[i][2];
 	}
+	cout << "MST: " << MST << endl;
+}
+//prim dla listy zmieniæ struct
+void Operation::primList()
+{
+	resultPrimList = new int*[nodes - 1];
+
+	bool *visited;
+	visited = new bool[nodes];
+	for (int i = 0; i < nodes; i++) visited[i] = false;
+
+	int currentNodes = x[0][0];
+	vector <int> rememberedNodes;
+	rememberedNodes.push_back(currentNodes);
+
+
 	int stad, tam, nWaga;
-	stad = aktualnyWierzcholek;
-	tam = aktualnyWierzcholek;
-	odwiedzone[aktualnyWierzcholek] = true;
+	stad = currentNodes;
+	tam = currentNodes;
+	visited[currentNodes] = true;
 
 	for (int i = 0; i < nodes; i++)
 	{
-		aktualnyWierzcholek = wierzcholkiDoDrzewa[0];
+		currentNodes = rememberedNodes[0];
 		nWaga = 11;
-		for (int j = 0; j < wierzcholkiDoDrzewa.size(); j++)
+		for (int j = 0; j < rememberedNodes.size(); j++)
 		{
-			
-			aktualnyWierzcholek = wierzcholkiDoDrzewa[j];
-			tmp = listD[aktualnyWierzcholek];
+
+			currentNodes = rememberedNodes[j];
+			tmp = listPrim[currentNodes];
 			while (tmp)
 			{
-				if (tmp->waga != 0 && tmp->waga < nWaga && odwiedzone[tmp->n] == false)
+				if (tmp->waga != 0 && tmp->waga < nWaga && visited[tmp->n] == false)
 				{
-					stad = aktualnyWierzcholek;
+					stad = currentNodes;
 					tam = tmp->n;
 					nWaga = tmp->waga;
 
@@ -361,156 +311,162 @@ void Operation::primLD()
 				tmp = tmp->next;
 			}
 		}
-		wynikLD[i] = new int[3];
-		wynikLD[i][0] = stad;
-		wynikLD[i][1] = tam;
-		wynikLD[i][2] = nWaga;
+		resultPrimList[i] = new int[3];
+		resultPrimList[i][0] = stad;
+		resultPrimList[i][1] = tam;
+		resultPrimList[i][2] = nWaga;
 
 
-		odwiedzone[tam] = true;
-		wierzcholkiDoDrzewa.push_back(tam);
+		visited[tam] = true;
+		rememberedNodes.push_back(tam);
 	}
 
+	delete visited;
+}
+
+//drukarz dla listy po primie
+void Operation::printPrimL()
+{
 	int MST = 0;
 	for (int i = 0; i < nodes - 1; i++) {
-		cout <<"(" <<  wynikLD[i][0] << "," << wynikLD[i][1] << ")   " << wynikLD[i][2] << endl;
-		MST += wynikLD[i][2];
+		cout << "(" << resultPrimList[i][0] << "," << resultPrimList[i][1] << ")   " << resultPrimList[i][2] << endl;
+		MST += resultPrimList[i][2];
 	}
 	cout << "MST: " << MST << endl;
 
 }
 
-void Operation::printMatrix1()
+
+void Operation::dijkstryL(int start)
 {
-	for (int i = 0; i < nodes; i++)
+	int i, j, u; //to do fora
+	bool *visited;
+	visited = new bool[nodes];
+	smallestListL = new int[nodes];
+	nodesListL = new int[nodes];
+	for (int i = 0; i<nodes; i++)
 	{
-		for (int j = 0; j < nodes; j++)
-		{
-			cout << matrix1[i][j] << " ";
-		}
-		cout << endl;
+		smallestListL[i] = MAXINT;
+		nodesListL[i] = -1;
+		visited[i] = false;
 	}
-}
-
-
-
-//tworzy i wyswietla dijkstry, ale najpier musisz wywolac funkcje makeNeighbourList
-//w makeNeighbour po tmp->n=sorce, dopisz tmp->waga=w;
-
-void Operation::dijkstr(int start)
-{
-	//n-nodes
-	//m-edges
-	int *d, *p, *S, sptr,i,j,u;
-	bool *QS;
-	//dd
-	d = new int[nodes];
-	p = new int[nodes];
-	QS = new bool[nodes];
-	S = new int[nodes];
-	sptr = 0;
+	smallestListL[start] = 0;
 
 	for (int i = 0; i<nodes; i++)
 	{
-		d[i] = MAXINT;
-		p[i] = -1;
-		QS[i] = false;
-		// neighborList1[i]=NULL;
-	}
+		for (j = 0; visited[j]; j++); //leci do nastêpnego nieodwiedzonego
+		for (u = j++; j<nodes; j++)if (!visited[j] && (smallestListL[j]<smallestListL[u])) u = j; //tragedia z wygl¹dem ale to jest podmianka jak kozystniejsza doga
 
-	cout << endl;
-	d[start] = 0;
-
-	for (int i = 0; i<nodes; i++)
-	{
-		for (j = 0; QS[j]; j++);
-		for ( u = j++; j<nodes; j++)
-			if (!QS[j] && (d[j]<d[u])) u = j;
-
-		QS[u] = true;
-
-
-		for (tmp = neighborList1[u]; tmp; tmp = tmp->next)
-			if (!QS[tmp->n] && (d[tmp->n] > d[u] + tmp->waga))
+		visited[u] = true;
+		for (tmp = ListDjikstry[u]; tmp; tmp = tmp->next)
+			if (!visited[tmp->n] && (smallestListL[tmp->n] > smallestListL[u] + tmp->waga))
 			{
-				d[tmp->n] = d[u] + tmp->waga;
-				p[tmp->n] = u;
+				smallestListL[tmp->n] = smallestListL[u] + tmp->waga;				// weryikacja i zapis
+				nodesListL[tmp->n] = u;
 			}
 	}
 
 
+	int *licz = new int[nodes];
+	/*int ile = 0;
 	cout << "Startowy " << startowy << endl;
 	cout << "End    Dist    Path" << endl;
 	for (i = 0; i < nodes; i++)
 	{
 		cout << i << ": ";
-		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
-		cout << "   | " << d[i] << " |   ";
-		while (sptr) cout << S[--sptr] << " ";
+		for (j = i; j > -1; j = nodesListL[j]) licz[ile++] = j;
+		cout << "   | " << smallestListL[i] << " |   ";
+		while (ile) cout << licz[--ile] << " ";
 		cout << endl;
-	}
+	}*/
+	delete visited, licz;
 }
 
 
-void Operation::dijkstrM(int start)
+void Operation::dijkstryM(int start)
 {
-	//n-nodes
-	//m-edges
-	int *d, *p, *S, sptr, i, j, u;
-	bool *QS;
-	//dd
-	d = new int[nodes];
-	p = new int[nodes];
-	QS = new bool[nodes];
-	S = new int[nodes];
-	sptr = 0;
-
+	int i, j, u; //to do fora
+	bool *visited;
+	visited = new bool[nodes];
+	smallestListM = new int[nodes];
+	nodesListM = new int[nodes];
 	for (int i = 0; i<nodes; i++)
 	{
-		d[i] = MAXINT;
-		p[i] = -1;
-		QS[i] = false;
-		// neighborList1[i]=NULL;
+		smallestListM[i] = MAXINT;
+		nodesListM[i] = -1;
+		visited[i] = false;
 	}
-
-	cout << endl;
-	d[start] = 0;
+	smallestListM[start] = 0;
 
 	for (int i = 0; i<nodes; i++)
 	{
-		for (j = 0; QS[j]; j++);
-		for (u = j++; j<nodes; j++)
-			if (!QS[j] && (d[j]<d[u])) u = j;
+		for (j = 0; visited[j]; j++); //leci do nastêpnego nieodwiedzonego
+		for (u = j++; j<nodes; j++)if (!visited[j] && (smallestListM[j]<smallestListM[u])) u = j; //tragedia z wygl¹dem ale to jest podmianka jak kozystniejsza doga
 
-		QS[u] = true;
-
+		visited[u] = true;
 
 		for (int g = 0; g < nodes; g++)
 		{
-			if (matrix2[u][g]!=0)
+			if (matrixDjistry[u][g] != 0)
 			{
-				if (!QS[g] && (d[g] > d[u] + matrix2[u][g]))
+				if (!visited[g] && (smallestListM[g] > smallestListM[u] + matrixDjistry[u][g]))
 				{
-					d[g] = d[u] + matrix2[u][g];
-					p[g] = u;
+					smallestListM[g] = smallestListM[u] + matrixDjistry[u][g];
+					nodesListM[g] = u;
 				}
 			}
 		}
-
 	}
-	cout << "Startowy " << startowy <<  endl;
+
+	int *licz = new int[nodes];
+	/*int ile = 0;
+	cout << "Startowy " << this->startowy << endl;
 	cout << "End    Dist    Path" << endl;
-	for (i = 0; i < nodes; i++)
+	for (int i = 0; i < nodes; i++)
 	{
 		cout << i << ": ";
-		for (j = i; j > -1; j = p[j]) S[sptr++] = j;
-		cout << "   | " << d[i] << " |   ";
-		while (sptr) cout << S[--sptr] << " ";
+		for (j = i; j > -1; j = nodesListM[j]) licz[ile++] = j;
+		cout << "   | " << smallestListM[i] << " |   ";
+		while (ile) cout << licz[--ile] << " ";
 		cout << endl;
-	}
+	}*/
+	delete visited, licz;
 }
+
 
 
 Operation::~Operation()
 {
+	for (int i = 0; i < edges; i++)
+	{
+		delete[] x[i];
+		delete[] y[i];
+
+	}
+	delete x;
+	x = NULL;
+	delete y;
+	y = NULL;
+
+	for (int i = 0; i < nodes; i++)
+	{
+		//delete[] listPrim[i];
+//		delete[] matrixPrim[i];
+//		delete[] matrixDjistry[i];
+//		delete[] ListDjikstry[i];
+	}
+	//delete listPrim;
+	//listPrim = NULL;
+	//delete matrixPrim;
+	//matrixPrim = NULL;
+	//delete matrixDjistry;
+	//matrixDjistry = NULL;
+	//delete  ListDjikstry;
+	//ListDjikstry = NULL;
+	//delete  matrixPrim;
+	//matrixPrim = NULL;
+
+	delete smallestListL, nodesListL, smallestListM, nodesListM;
+	delete tmp, tmpDelete;
+
 }

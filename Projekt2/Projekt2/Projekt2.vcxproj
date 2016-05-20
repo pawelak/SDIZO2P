@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0D265BA3-55EC-45C5-B24D-AF713E5D42E4}</ProjectGuid>
+    <ProjectGuid>{488A7F2D-E876-4D3D-A679-3B427D0CC9DD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Projekt2</RootNamespace>
+    <RootNamespace>projekt2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,14 +146,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GenerateGraph.h" />
+    <ClInclude Include="MENU.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GenerateGraph.cpp" />
+    <ClCompile Include="MENU.cpp" />
     <ClCompile Include="Operation.cpp" />
-    <ClCompile Include="Projekt2.cpp" />
+    <ClCompile Include="projekt2.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
